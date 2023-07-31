@@ -1,0 +1,173 @@
+<h5>Cadastro de Clientes</h5>
+<p>Preencha o formulário para incluir um cliente</p>
+<hr />
+
+<form class="mb-5" [formGroup]="formCadastro" (ngSubmit)="onSubmit()">
+  <div class="row mb-2">
+    <div class="col-md-6">
+      <label>Nome do cliente:</label>
+      <input type="text" class="form-control" formControlName="nome" />
+      <span *ngIf="form.nome.touched && form.nome.invalid" class="text-danger">
+        <span *ngIf="form.nome.errors.required"> Campo obrigatório. </span>
+      </span>
+    </div>
+    <div class="col-md-3">
+      <label>CPF:</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="cpf"
+        mask="000.000.000-00"
+      />
+      <span *ngIf="form.cpf.touched && form.cpf.invalid" class="text-danger">
+        <span *ngIf="form.cpf.errors.required"> Campo obrigatório. </span>
+      </span>
+    </div>
+    <div class="col-md-3">
+      <label>Telefone:</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="telefone"
+        mask="(00)00000-0000"
+      />
+      <span
+        *ngIf="form.telefone.touched && form.telefone.invalid"
+        class="text-danger"
+      >
+        <span *ngIf="form.telefone.errors.required"> Campo obrigatório. </span>
+      </span>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-md-3">
+      <label>Data de nascimento:</label>
+      <input
+        type="date"
+        class="form-control"
+        formControlName="dataNascimento"
+      />
+      <span
+        *ngIf="form.dataNascimento.touched && form.dataNascimento.invalid"
+        class="text-danger"
+      >
+        <span *ngIf="form.dataNascimento.errors.required">
+          Campo obrigatório.
+        </span>
+      </span>
+    </div>
+    <div class="col-md-6">
+      <label>Selecione o plano:</label>
+      <select class="form-select" formControlName="plano">
+        <option value="">Escolha uma opção</option>
+      </select>
+      <span
+        *ngIf="form.plano.touched && form.plano.invalid"
+        class="text-danger"
+      >
+        <span *ngIf="form.plano.errors.required"> Campo obrigatório. </span>
+      </span>
+    </div>
+    <div class="col-md-3">
+      <div>
+        <label>Cliente possui endereço?</label>
+      </div>
+      <div>
+        <input
+          type="radio"
+          (click)="onRadioButtonClick($event)"
+          name="possuiEndereco"
+          value="1"
+          checked
+        />
+        Sim &nbsp;
+        <input
+          type="radio"
+          (click)="onRadioButtonClick($event)"
+          name="possuiEndereco"
+          value="0"
+        />
+        Não
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="possuiEndereco">
+    <div class="row mb-2">
+      <div class="col-md-3">
+        <label>Informe o CEP:</label>
+        <input
+          type="text"
+          (input)="onCepInput($event)"
+          class="form-control"
+          formControlName="cep"
+          mask="00000-000"
+        />
+      </div>
+      <div class="col-md-9">
+        <label>Logradouro:</label>
+        <input type="text" class="form-control" formControlName="logradouro" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-md-2">
+        <label>Número:</label>
+        <input type="text" class="form-control" formControlName="numero" />
+      </div>
+      <div class="col-md-2">
+        <label>Complemento:</label>
+        <input type="text" class="form-control" formControlName="complemento" />
+      </div>
+      <div class="col-md-3">
+        <label>Bairro:</label>
+        <input type="text" class="form-control" formControlName="bairro" />
+      </div>
+      <div class="col-md-3">
+        <label>Cidade:</label>
+        <input type="text" class="form-control" formControlName="cidade" />
+      </div>
+      <div class="col-md-2">
+        <label>UF:</label>
+        <input type="text" class="form-control" formControlName="uf" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-md-6">
+      <label>Envie a foto do cliente:</label>
+      <input type="file" class="form-control" />
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-md-6">
+      <label>Nome do dependente:</label>
+      <input type="text" class="form-control" />
+    </div>
+    <div class="col-md-2">
+      <label>Idade:</label>
+      <input type="text" class="form-control" />
+    </div>
+    <div class="col-md-4">
+      <div class="mt-4">
+        <button class="btn btn-light">Adicionar</button>
+        &nbsp;
+        <button class="btn btn-light">Remover</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-md-3">
+      <input
+        type="submit"
+        class="btn btn-success"
+        value="Realizar Cadastro"
+        [disabled]="!formCadastro.valid"
+      />
+    </div>
+  </div>
+</form>

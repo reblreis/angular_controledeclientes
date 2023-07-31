@@ -1,0 +1,57 @@
+<h5>Consulta de Clientes</h5>
+<p>Listagem de clientes cadastrados</p>
+<hr />
+
+<form>
+  <div class="row mb-2">
+    <div class="col-md-6">
+      <label>Nome do cliente:</label>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Digite o nome para pesquisa aqui."
+      />
+    </div>
+    <div class="col-md-6">
+      <input
+        type="submit"
+        class="btn btn-primary mt-4"
+        value="Realizar Pesquisa"
+      />
+    </div>
+  </div>
+</form>
+
+<div class="table-responsive mt-2">
+  <table class="table table-sm table-hover table-striped">
+    <thead>
+      <tr>
+        <th>Nome do cliente</th>
+        <th>CPF</th>
+        <th>Telefone</th>
+        <th>Data de Nasc</th>
+        <th>Operações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+          <button class="btn btn-sm btn-outline-secondary">Exibir</button>
+          &nbsp;
+          <button class="btn btn-sm btn-outline-primary">Editar</button>
+          &nbsp;
+          <button class="btn btn-sm btn-outline-danger">Excluir</button>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5">Quantidade de clientes: 0</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
