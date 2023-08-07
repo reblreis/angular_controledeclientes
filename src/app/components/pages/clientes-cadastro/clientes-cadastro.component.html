@@ -57,10 +57,22 @@
         </span>
       </span>
     </div>
-    <div class="col-md-6">
-      <label>Selecione o plano:</label>
-      <select class="form-select" formControlName="plano">
+    <div class="col-md-3">
+      <label>Selecione o tipo:</label>
+      <select class="form-select" formControlName="plano" #tipoSelect>
         <option value="">Escolha uma opção</option>
+        <option value="{{ item.id }}" *ngFor="let item of tipos">
+          {{ item.nome | uppercase }}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label>Selecione o plano:</label>
+      <select class="form-select" formControlName="plano" #planoSelect>
+        <option value="">Escolha uma opção</option>
+        <option value="{{ item.id }}" *ngFor="let item of planos">
+          {{ item.nome | uppercase }}
+        </option>
       </select>
       <span
         *ngIf="form.plano.touched && form.plano.invalid"
@@ -145,17 +157,69 @@
   <div class="row mb-2">
     <div class="col-md-6">
       <label>Nome do dependente:</label>
-      <input type="text" class="form-control" />
+      <input
+        type="text"
+        class="form-control"
+        formControlName="nomeDependente"
+      />
     </div>
     <div class="col-md-2">
       <label>Idade:</label>
-      <input type="text" class="form-control" />
+      <input
+        type="number"
+        min="1"
+        class="form-control"
+        formControlName="idadeDependente"
+      />
     </div>
     <div class="col-md-4">
       <div class="mt-4">
-        <button class="btn btn-light">Adicionar</button>
+        <button class="btn btn-outline-primary" (click)="adicionarDependente()">
+          Adicionar
+        </button>
         &nbsp;
-        <button class="btn btn-light">Remover</button>
+        <button
+          class="btn btn-outline-danger"
+          [disabled]="formDependentes.length == 0"
+          (click)="removerUltimoDependente()"
+        >
+          Remover Último
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- dependentes adicionados pelo usuário -->
+  <div formArrayName="dependentes">
+    <div *ngFor="let item of formDependentes.controls; let i = index">
+      <div class="row mb-2" [formGroupName]="i">
+        <div class="col-md-6">
+          <label>Nome do dependente:</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="nomeDependente"
+          />
+        </div>
+        <div class="col-md-2">
+          <label>Idade:</label>
+          <input
+            type="number"
+            min="1"
+            class="form-control"
+            formControlName="idadeDependente"
+          />
+        </div>
+        <div class="col-md-4">
+          <div class="mt-4">
+            <button
+              class="btn btn-outline-danger"
+              (click)="removerDependente(i)"
+            >
+              Remover
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
