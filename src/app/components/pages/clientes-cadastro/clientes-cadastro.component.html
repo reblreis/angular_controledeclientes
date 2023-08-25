@@ -2,7 +2,16 @@
 <p>Preencha o formulário para incluir um cliente</p>
 <hr />
 
-<form class="mb-5" [formGroup]="formCadastro" (ngSubmit)="onSubmit()">
+<h3 class="mb-2">
+  {{mensagem}}
+</h3>
+
+<form
+  class="mb-5"
+  [formGroup]="formCadastro"
+  (ngSubmit)="onSubmit()"
+  enctype="multipart/form-data"
+>
   <div class="row mb-2">
     <div class="col-md-6">
       <label>Nome do cliente:</label>
@@ -61,7 +70,7 @@
       <label>Selecione o tipo:</label>
       <select class="form-select" formControlName="plano" #tipoSelect>
         <option value="">Escolha uma opção</option>
-        <option value="{{ item.id }}" *ngFor="let item of tipos">
+        <option [value]="item.id" *ngFor="let item of tipos">
           {{ item.nome | uppercase }}
         </option>
       </select>
@@ -70,7 +79,7 @@
       <label>Selecione o plano:</label>
       <select class="form-select" formControlName="plano" #planoSelect>
         <option value="">Escolha uma opção</option>
-        <option value="{{ item.id }}" *ngFor="let item of planos">
+        <option [value]="item.id" *ngFor="let item of planos">
           {{ item.nome | uppercase }}
         </option>
       </select>
@@ -150,7 +159,10 @@
   <div class="row mb-2">
     <div class="col-md-6">
       <label>Envie a foto do cliente:</label>
-      <input type="file" class="form-control" />
+      <input type="file" class="form-control" (change)="onFileChange($event)" />
+      <span class="text-danger">
+        {{ arquivoMsgErro }}
+      </span>
     </div>
   </div>
 
@@ -174,12 +186,17 @@
     </div>
     <div class="col-md-4">
       <div class="mt-4">
-        <button class="btn btn-outline-primary" (click)="adicionarDependente()">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="adicionarDependente()"
+        >
           Adicionar
         </button>
         &nbsp;
         <button
           class="btn btn-outline-danger"
+          type="button"
           [disabled]="formDependentes.length == 0"
           (click)="removerUltimoDependente()"
         >
@@ -214,6 +231,7 @@
           <div class="mt-4">
             <button
               class="btn btn-outline-danger"
+              type="button"
               (click)="removerDependente(i)"
             >
               Remover
@@ -230,7 +248,6 @@
         type="submit"
         class="btn btn-success"
         value="Realizar Cadastro"
-        [disabled]="!formCadastro.valid"
       />
     </div>
   </div>

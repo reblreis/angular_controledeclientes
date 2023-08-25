@@ -2,7 +2,7 @@
 <p>Listagem de clientes cadastrados</p>
 <hr />
 
-<form>
+<form [formGroup]="formConsulta" (ngSubmit)="onSubmit()">
   <div class="row mb-2">
     <div class="col-md-6">
       <label>Nome do cliente:</label>
@@ -10,48 +10,275 @@
         type="text"
         class="form-control"
         placeholder="Digite o nome para pesquisa aqui."
+        formControlName="nome"
       />
+      <span class="text-danger" *ngIf="form.nome.touched && form.nome.invalid">
+        <span *ngIf="form.nome.errors.required">
+          Por favor, informe o nome do cliente para realizar a busca.
+        </span>
+        <span *ngIf="form.nome.errors.minlength">
+          Por favor, informe no mínimo 3 caracteres.
+        </span>
+      </span>
+      <span *ngIf="mensagem">
+        <strong>{{ mensagem }}</strong>
+      </span>
     </div>
     <div class="col-md-6">
       <input
         type="submit"
         class="btn btn-primary mt-4"
         value="Realizar Pesquisa"
+        [disabled]="!formConsulta.valid"
       />
     </div>
   </div>
 </form>
 
-<div class="table-responsive mt-2">
+<div class="table-responsive mt-2" *ngIf="clientes.length > 0">
   <table class="table table-sm table-hover table-striped">
     <thead>
       <tr>
+        <th>Foto</th>
         <th>Nome do cliente</th>
         <th>CPF</th>
         <th>Telefone</th>
-        <th>Data de Nasc</th>
+        <th>Plano</th>
         <th>Operações</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+      <tr *ngFor="let item of clientes">
         <td>
-          <button class="btn btn-sm btn-outline-secondary">Exibir</button>
-          &nbsp;
-          <button class="btn btn-sm btn-outline-primary">Editar</button>
-          &nbsp;
-          <button class="btn btn-sm btn-outline-danger">Excluir</button>
+          <img
+            src="http://clientesapi10-001-site1.itempurl.com{{ item.arquivo }}"
+            height="60"
+            width="60"
+          />
+        </td>
+        <td>
+          <div>
+            {{ item.nome | uppercase }}
+          </div>
+          <div>
+            Data de nasc: {{ item.dataNascimento | date : "dd/MM/yyyy" }}
+          </div>
+        </td>
+        <td>
+          {{ item.cpf | mask : "000.000.000-00" }}
+        </td>
+        <td>
+          {{ item.telefone | mask : "(00)00000-0000" }}
+        </td>
+        <td>
+          <div *ngIf="item.plano == 1">
+            <span class="badge bg-primary">PLANO PREFERENCIAL</span>
+          </div>
+          <div *ngIf="item.plano == 2">
+            <span class="badge bg-danger">PLANO EMPRESA</span>
+          </div>
+          <div *ngIf="item.plano == 3">
+            <span class="badge bg-success">PLANO VIP</span>
+          </div>
+        </td>
+        <td>
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#dadosCliente"
+            (click)="onButtonClick(item)"
+          >
+            Exibir dados
+          </button>
         </td>
       </tr>
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="5">Quantidade de clientes: 0</td>
+        <td colspan="6">Quantidade de clientes: {{ clientes.length }}</td>
       </tr>
     </tfoot>
   </table>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="dadosCliente"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Dados do cliente
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body" *ngIf="cliente">
+        <div class="row mb-2">
+          <div class="col-md-3 text-center">
+            <img
+              src="http://clientesapi10-001-site1.itempurl.com{{
+                cliente.arquivo
+              }}"
+              height="150"
+              width="150"
+            />
+          </div>
+          <div class="col-md-9">
+            <table class="table table-sm">
+              <tr>
+                <td>Nome do cliente:</td>
+                <td>
+                  {{ cliente.nome | uppercase }}
+                </td>
+              </tr>
+              <tr>
+                <td>Data de nasc:</td>
+                <td>
+                  {{ cliente.dataNascimento | date : "dd/MM/yyyy" }}
+                </td>
+              </tr>
+              <tr>
+                <td>CPF:</td>
+                <td>
+                  {{ cliente.cpf | mask : "000.000.000-00" }}
+                </td>
+              </tr>
+              <tr>
+                <td>Telefone:</td>
+                <td>
+                  {{ cliente.telefone | mask : "(00)00000-0000" }}
+                </td>
+              </tr>
+              <tr>
+                <td>Plano:</td>
+                <td>
+                  <div *ngIf="cliente.plano == 1">
+                    <span class="badge bg-primary">PLANO PREFERENCIAL</span>
+                  </div>
+                  <div *ngIf="cliente.plano == 2">
+                    <span class="badge bg-danger">PLANO EMPRESA</span>
+                  </div>
+                  <div *ngIf="cliente.plano == 3">
+                    <span class="badge bg-success">PLANO VIP</span>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-md-12">
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button
+                    class="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
+                    Endereço do cliente
+                  </button>
+                </h2>
+                <div
+                  id="collapseOne"
+                  class="accordion-collapse collapse"
+                  aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div class="accordion-body">
+                    <table class="table table-sm">
+                      <tr>
+                        <td>Logradouro:</td>
+                        <td>{{ cliente.logradouro }}</td>
+                      </tr>
+                      <tr>
+                        <td>Número:</td>
+                        <td>{{ cliente.numero }}</td>
+                      </tr>
+                      <tr>
+                        <td>Complemento:</td>
+                        <td>{{ cliente.complemento }}</td>
+                      </tr>
+                      <tr>
+                        <td>Bairro:</td>
+                        <td>{{ cliente.bairro }}</td>
+                      </tr>
+                      <tr>
+                        <td>Cidade:</td>
+                        <td>{{ cliente.cidade }}</td>
+                      </tr>
+                      <tr>
+                        <td>UF:</td>
+                        <td>{{ cliente.uf }}</td>
+                      </tr>
+                      <tr>
+                        <td>CEP:</td>
+                        <td>{{ cliente.cep | mask : "00000-000" }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo"
+                    aria-expanded="false"
+                    aria-controls="collapseTwo"
+                  >
+                    Dependentes do cliente
+                  </button>
+                </h2>
+                <div
+                  id="collapseTwo"
+                  class="accordion-collapse collapse"
+                  aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div class="accordion-body">
+                    <table class="table table-sm table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Nome do dependente</th>
+                          <th>Idade</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of cliente.dependentes">
+                          <td>{{ item.nomeDependente }}</td>
+                          <td>{{ item.idadeDependente }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
